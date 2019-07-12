@@ -1,5 +1,5 @@
 require('mongoose')
-.connect('mongodb://localhost/relation2705',{
+.connect('mongodb://localhost/server2705',{
     useNewUrlParser: true,
     useCreateIndex: true,
     useFindAndModify: false
