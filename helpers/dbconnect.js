@@ -4,5 +4,3 @@ require('mongoose')
     useCreateIndex: true,
     useFindAndModify: false
 })
-.then(()=>console.log('DB connected!'))
-.catch(err=>console.log(err.message))

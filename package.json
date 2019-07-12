@@ -10,6 +10,11 @@
     "mongoose": "^5.6.4"
   },
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "test": "jest --watch"
+  },
+  "devDependencies": {
+    "@shelf/jest-mongodb": "^1.1.0",
+    "jest": "^24.8.0"
   }
 }
