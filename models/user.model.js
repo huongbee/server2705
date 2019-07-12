@@ -23,7 +23,7 @@ const UserSchema = new Schema({
     ]
 })
 class User{
-    async signUp(email, name, password ){
+    static async signUp(email, name, password ){
         if(!email || email == '')
             throw new Error('Missing email!');
         if(!name || name == '')
