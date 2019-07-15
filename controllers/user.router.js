@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { User } = require('../models/user.model')
+const { authenticate } = require('../helpers/authenticate')
 
 router.post('/register',(req, res)=>{
     const { email, password, name } = req.body
@@ -38,6 +39,13 @@ router.post('/login',(req, res)=>{
             message: error.message
         })
     })
+})
+
+router.post('/send-friend-request', authenticate, (req, res)=>{
+    const { idReceiver } = req.body
+    const idSender = req.userId;
+    res.send({ idSender,idReceiver })
+    // User.sendFriendRequest(idSender,idReceiver)
 })
 
 module.exports = router;

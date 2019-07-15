@@ -70,6 +70,13 @@ class User{
             token
         }
     }
+    //idSender: id user logged in
+    static async sendFriendRequest(idSender, idReceiver){
+        console.log(idSender, idReceiver)
+    }
+    static async acceptFriend(idUserA, idUserB){
+
+    }
 }
 const UserModel = mongoose.model('user', UserSchema);
 module.exports = { UserModel, User }
