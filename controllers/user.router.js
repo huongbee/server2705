@@ -21,4 +21,23 @@ router.post('/register',(req, res)=>{
     })
 })
 
+router.post('/login',(req, res)=>{
+    const { email, password } = req.body
+    User.signIn(email, password)
+    .then(user=>{
+        res.send({
+            code: 1,
+            data: user,
+            message: ''
+        })
+    })
+    .catch(error=>{
+        res.send({
+            code: 0,
+            data: null,
+            message: error.message
+        })
+    })
+})
+
 module.exports = router;

@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const { hash, compare } = require('../helpers/bcrypt') 
+
 const UserSchema = new Schema({
     email: {
         type: String,
@@ -32,8 +34,12 @@ class User{
             throw new Error('Missing password!');
         const check = await UserModel.findOne({email})
         if(check) throw new Error('Email exists!')
+        
+        const passwordHash = await hash(password)
+        if(!passwordHash) throw new Error('Something wrong!')
+
         const user = await UserModel.create({
-            email, name, password
+            email, name, password: passwordHash
         })
         if(!user) throw new Error('Something wrong!')
         return { 
@@ -42,6 +48,21 @@ class User{
             email: user.email
         }
         
+    }
+    static async signIn(email, password){
+        if(!email || email == '')
+            throw new Error('Missing email!');
+        if(!password || password == '')
+            throw new Error('Missing password!');
+        const user = await UserModel.findOne({email})
+        if(!user) throw new Error('Can not find user!');
+        const check = await compare(password, user.password)
+        if(!check) throw new Error('Password invalid!');
+        return { 
+            _id: user._id,
+            name: user.name,
+            email: user.email
+        }
     }
 }
 const UserModel = mongoose.model('user', UserSchema);
