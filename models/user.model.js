@@ -96,6 +96,12 @@ class User{
         if(!otherUser) throw new Error('Can not update receiver')
         return true;
     }
+    /**
+     * set friend
+     * @param { ObjectId } idUserA user logged in
+     * @param { ObjectId } idUserB receiver
+     * @return Promise<boolean>
+     */
     static async acceptFriend(idUserA, idUserB){
         if(!idUserA || idUserA == '')
             throw new Error('Missing sender!');
@@ -125,6 +131,10 @@ class User{
         if(!otherUser) throw new Error('Can not update user')
         return true;
     }
+    //remove friend send request 
+    //remove friend receive request 
+    //remove friend
+
 }
 const UserModel = mongoose.model('user', UserSchema);
 module.exports = { UserModel, User }
