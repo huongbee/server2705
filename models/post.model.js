@@ -23,22 +23,24 @@ class Post{
      * @param {*} author user id
      * @param {*} content content's post
      */
-    static async createPost(author,content) {
-        if(!author || author == '')
+    static async createPost(userID,content) {
+        if(!userID || userID == '')
             throw new Error('Missing author!');
         if(!content || content == '')
             throw new Error('Plz fill content!');
-        if(!mongoose.Types.ObjectId.isValid(author))
+        if(!mongoose.Types.ObjectId.isValid(userID))
             throw new Error('User id invalid!');
-        const user = await UserModel.findById(author);
+        const user = await UserModel.findById(userID);
         if(!user) throw new Error('Can not find author!');
-        const post = await PostModel.create({author, content})
+        const post = await PostModel.create({
+            author: userID,content
+        })
         if(!post) throw new Error('Can not create post!');
         const author = UserModel.findByIdAndUpdate(
-            author,
+            userID,
             { $addToSet: { posts: post._id }}
         )
-        if(!post) throw new Error('Can not update author!');
+        if(!author) throw new Error('Can not update author!');
         return {
             _id: post._id,
             content: post.content
