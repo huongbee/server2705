@@ -44,8 +44,17 @@ router.post('/login',(req, res)=>{
 router.post('/send-friend-request', authenticate, (req, res)=>{
     const { idReceiver } = req.body
     const idSender = req.userId;
-    res.send({ idSender,idReceiver })
-    // User.sendFriendRequest(idSender,idReceiver)
+    User.sendFriendRequest(idSender,idReceiver)
+    .then(result=>res.status(200).send({
+        code: 1,
+        data: result, // result: true
+        message: 'Send friend request successfuly!'
+    }))
+    .catch(err=>res.send({
+        code: 0,
+        data: null,
+        message: err.message
+    }))
 })
 
 module.exports = router;

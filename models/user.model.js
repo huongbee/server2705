@@ -72,7 +72,29 @@ class User{
     }
     //idSender: id user logged in
     static async sendFriendRequest(idSender, idReceiver){
-        console.log(idSender, idReceiver)
+        if(!idSender || idSender == '')
+            throw new Error('Missing sender!');
+        if(!idReceiver || idReceiver == '')
+            throw new Error('Missing receiver!');
+        if(idSender===idReceiver)
+            throw new Error('Error!');
+        if(!mongoose.Types.ObjectId.isValid(idReceiver) || !mongoose.Types.ObjectId.isValid(idSender))
+            throw new Error('User id invalid!');
+        const receiver = await UserModel.findById(idReceiver);
+        if(!receiver) throw new Error('Can not find user')
+        const sender = await UserModel.findByIdAndUpdate(
+            idSender,
+            { $addToSet: { sendRequests: receiver._id } },
+            { new: true }
+        )
+        if(!sender) throw new Error('Can not update sender')
+        const otherUser = await UserModel.findByIdAndUpdate(
+            receiver._id,
+            { $addToSet:{ receiveRequests: sender._id } },
+            { new: true }
+        )
+        if(!otherUser) throw new Error('Can not update receiver')
+        return true;
     }
     static async acceptFriend(idUserA, idUserB){
 
