@@ -97,7 +97,33 @@ class User{
         return true;
     }
     static async acceptFriend(idUserA, idUserB){
-
+        if(!idUserA || idUserA == '')
+            throw new Error('Missing sender!');
+        if(!idUserB || idUserB == '')
+            throw new Error('Missing receiver!');
+        if(idUserA===idUserB)
+            throw new Error('Error!');
+        if(!mongoose.Types.ObjectId.isValid(idUserB) || !mongoose.Types.ObjectId.isValid(idUserA))
+            throw new Error('User id invalid!');
+        const userB = await UserModel.findById(idUserB)
+        if(!userB) throw new Error('Can not find user')
+        const userA = await UserModel.findByIdAndUpdate(
+            idUserA,
+            { 
+                $pull: { receiveRequests: userB._id },
+                $addToSet: { friends: userB._id }
+            }
+        )
+        if(!userB) throw new Error('Can not update user')
+        const otherUser = await UserModel.findByIdAndUpdate(
+            userB._id,
+            { 
+                $pull: { sendRequests: userA._id },
+                $addToSet: { friends: userA._id }
+            }
+        )
+        if(!otherUser) throw new Error('Can not update user')
+        return true;
     }
 }
 const UserModel = mongoose.model('user', UserSchema);

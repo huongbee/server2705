@@ -56,5 +56,20 @@ router.post('/send-friend-request', authenticate, (req, res)=>{
         message: err.message
     }))
 })
+router.post('/accept-friend-request', authenticate, (req, res)=>{
+    const { idReceiver } = req.body // 
+    const idSender = req.userId; // user login
+    User.acceptFriend(idSender, idReceiver)
+    .then(result=>res.status(200).send({
+        code: 1,
+        data: result, // result: true
+        message: 'Set friend successfuly!'
+    }))
+    .catch(err=>res.send({
+        code: 0,
+        data: null,
+        message: err.message
+    }))
+})
 
 module.exports = router;
